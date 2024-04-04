@@ -40,6 +40,8 @@
                 renderWorldCopies: false,
                 projection: 'globe',
                 hash: true,
+                customAttribution:
+                    'USGS/NASA: <a href="https://astrogeology.usgs.gov/search/map/Moon/LRO/LROC_WAC/Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013">Surface</a> | <a href="https://planetarynames.wr.usgs.gov/Page/MOON/target">Crater</a> | <a href="https://pgda.gsfc.nasa.gov/products/54">DEM</a>',
                 style: {
                     version: 8,
                     glyphs: 'https://mierune.github.io/fonts/{fontstack}/{range}.pbf',
@@ -61,14 +63,10 @@
                             tileSize: 512,
                             maxzoom: 8,
                             bounds: [-180, -60, 180, 60],
-                            attribution:
-                                'DEM: <a href="https://pgda.gsfc.nasa.gov/products/54">NASA</a>',
                         },
                         crater: {
                             type: 'geojson',
                             data: './crater.geojson',
-                            attribution:
-                                'Crater data: <a href="https://planetarynames.wr.usgs.gov/Page/MOON/target">USGS</a>',
                         },
                     },
                     layers: [
