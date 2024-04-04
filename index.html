@@ -51,7 +51,6 @@
                             ],
                             tileSize: 256,
                             maxzoom: 7,
-                            attribution: 'NASA / USGS',
                         },
                         // Use a different source for terrain and hillshade layers, to improve render quality
                         terrain: {
@@ -62,10 +61,14 @@
                             tileSize: 512,
                             maxzoom: 8,
                             bounds: [-180, -60, 180, 60],
+                            attribution:
+                                'DEM: <a href="https://pgda.gsfc.nasa.gov/products/54">NASA</a>',
                         },
                         crater: {
                             type: 'geojson',
                             data: './crater.geojson',
+                            attribution:
+                                'Crater data: <a href="https://planetarynames.wr.usgs.gov/Page/MOON/target">USGS</a>',
                         },
                     },
                     layers: [
