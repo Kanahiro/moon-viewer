@@ -44,17 +44,17 @@
                     version: 8,
                     glyphs: 'https://mierune.github.io/fonts/{fontstack}/{range}.pbf',
                     sources: {
-                        osm: {
+                        surface: {
                             type: 'raster',
                             tiles: [
                                 'https://tiles.spatialty.io/moon_surface/{z}/{x}/{y}.png',
                             ],
                             tileSize: 256,
-                            attribution: '&copy; OpenStreetMap Contributors',
                             maxzoom: 7,
+                            attribution: 'NASA / USGS',
                         },
                         // Use a different source for terrain and hillshade layers, to improve render quality
-                        terrainSource: {
+                        terrain: {
                             type: 'raster-dem',
                             tiles: [
                                 'https://tiles.spatialty.io/moon_terrain/{z}/{x}/{y}.png',
@@ -70,9 +70,9 @@
                     },
                     layers: [
                         {
-                            id: 'osm',
+                            id: 'surface',
                             type: 'raster',
-                            source: 'osm',
+                            source: 'surface',
                         },
 
                         {
@@ -126,7 +126,7 @@
                         },
                     ],
                     terrain: {
-                        source: 'terrainSource',
+                        source: 'terrain',
                         exaggeration: [
                             'interpolate',
                             ['linear'],
