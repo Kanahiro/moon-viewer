@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>🌜Moon Viewer🌛</title>
+        <meta
+            name="viewport"
+            content="initial-scale=1,maximum-scale=1,user-scalable=no"
+        />
+        <link
+            href="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.css"
+            rel="stylesheet"
+        />
+        <script src="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.js"></script>
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+            }
+            #map {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                width: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="map"></div>
+        <script>
+            // TO MAKE THE MAP APPEAR YOU MUST
+            // ADD YOUR ACCESS TOKEN FROM
+            // https://account.mapbox.com
+            mapboxgl.accessToken =
+                'pk.eyJ1Ijoia2FuYWhpcm8iLCJhIjoiY2wzdm04ZHJzMHNtYzNkbnAzdTZqMzAzZyJ9.1kUXYHncNTcEZiZwA3T0qg';
+            const map = new mapboxgl.Map({
+                container: 'map',
+                zoom: 4,
+                center: [11.39085, 47.27574],
+                renderWorldCopies: false,
+                projection: 'globe',
+                hash: true,
+                style: {
+                    version: 8,
+                    glyphs: 'https://mierune.github.io/fonts/{fontstack}/{range}.pbf',
+                    sources: {
+                        osm: {
+                            type: 'raster',
+                            tiles: [
+                                'https://tiles.spatialty.io/moon_surface/{z}/{x}/{y}.png',
+                            ],
+                            tileSize: 256,
+                            attribution: '&copy; OpenStreetMap Contributors',
+                            maxzoom: 7,
+                        },
+                        // Use a different source for terrain and hillshade layers, to improve render quality
+                        terrainSource: {
+                            type: 'raster-dem',
+                            tiles: [
+                                'https://tiles.spatialty.io/moon_terrain/{z}/{x}/{y}.png',
+                            ],
+                            tileSize: 512,
+                            maxzoom: 8,
+                            bounds: [-180, -60, 180, 60],
+                        },
+                        crater: {
+                            type: 'geojson',
+                            data: './crater.geojson',
+                        },
+                    },
+                    layers: [
+                        {
+                            id: 'osm',
+                            type: 'raster',
+                            source: 'osm',
+                        },
+
+                        {
+                            id: 'crater',
+                            type: 'symbol',
+                            source: 'crater',
+                            layout: {
+                                'text-field': ['get', 'name'],
+                                'text-font': ['Metropolis Bold'],
+                                'text-size': 15,
+                            },
+                            paint: {
+                                'text-color': 'white',
+                                'text-halo-color': 'black',
+                                'text-halo-width': 1,
+                            },
+                            minzoom: 5,
+                        },
+                        {
+                            id: 'crater-mid',
+                            type: 'symbol',
+                            source: 'crater',
+                            layout: {
+                                'text-field': ['get', 'name'],
+                                'text-font': ['Metropolis Bold'],
+                                'text-size': 17,
+                            },
+                            paint: {
+                                'text-color': 'white',
+                                'text-halo-color': 'black',
+                                'text-halo-width': 1,
+                            },
+                            filter: ['>', ['get', 'diameter'], 100],
+                            minzoom: 3.5,
+                        },
+                        {
+                            id: 'crater-big',
+                            type: 'symbol',
+                            source: 'crater',
+                            layout: {
+                                'text-field': ['get', 'name'],
+                                'text-font': ['Metropolis Bold'],
+                                'text-size': 20,
+                            },
+                            paint: {
+                                'text-color': 'white',
+                                'text-halo-color': 'black',
+                                'text-halo-width': 1,
+                            },
+                            filter: ['>', ['get', 'diameter'], 300],
+                        },
+                    ],
+                    terrain: {
+                        source: 'terrainSource',
+                        exaggeration: [
+                            'interpolate',
+                            ['linear'],
+                            ['zoom'],
+                            4,
+                            0,
+                            6,
+                            40,
+                        ],
+                    },
+                    fog: {
+                        color: 'rgba(186, 210, 235, 0.1)', // Lower atmosphere
+                        'high-color': 'rgba(36, 92, 223, 0.1)', // Upper atmosphere
+                        'horizon-blend': 0.2, // Atmosphere thickness (default 0.2 at low zooms)
+                        'space-color': 'rgb(11, 11, 25)', // Background color
+                        'star-intensity': 0.6,
+                    },
+                },
+                maxPitch: 50,
+                maxZoom: 8,
+            });
+
+            map.addControl(new mapboxgl.NavigationControl());
+        </script>
+    </body>
+</html>
