@@ -37,7 +37,6 @@
                 container: 'map',
                 zoom: 2,
                 renderWorldCopies: false,
-                projection: 'globe',
                 hash: true,
                 customAttribution:
                     'USGS/NASA: <a href="https://astrogeology.usgs.gov/search/map/Moon/LRO/LROC_WAC/Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013">Surface</a> | <a href="https://planetarynames.wr.usgs.gov/Page/MOON/target">Crater</a> | <a href="https://pgda.gsfc.nasa.gov/products/54">DEM</a>',
@@ -73,6 +72,9 @@
                             id: 'surface',
                             type: 'raster',
                             source: 'surface',
+                            paint: {
+                                'raster-fade-duration': 0,
+                            },
                         },
 
                         {
@@ -131,7 +133,7 @@
                             'interpolate',
                             ['linear'],
                             ['zoom'],
-                            4,
+                            5,
                             0,
                             6,
                             40,
@@ -145,11 +147,22 @@
                         'star-intensity': 0.6,
                     },
                 },
-                maxPitch: 50,
+                maxPitch: 60,
                 maxZoom: 8,
             });
 
             map.addControl(new mapboxgl.NavigationControl());
+
+            map.on('move', () => {
+                if (map.getZoom() >= 5) {
+                    map.setProjection('mercator');
+                    if (map.getPitch() === 0) {
+                        map.setPitch(10);
+                    }
+                } else {
+                    map.setProjection('globe');
+                }
+            });
         </script>
     </body>
 </html>
