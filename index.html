@@ -1,168 +1,150 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <title>🌜Moon Viewer🌛</title>
-        <meta
-            name="viewport"
-            content="initial-scale=1,maximum-scale=1,user-scalable=no"
-        />
-        <link
-            href="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.css"
-            rel="stylesheet"
-        />
-        <script src="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.js"></script>
-        <style>
-            body {
-                margin: 0;
-                padding: 0;
-            }
-            #map {
-                position: absolute;
-                top: 0;
-                bottom: 0;
-                width: 100%;
-            }
-        </style>
-    </head>
-    <body>
-        <div id="map"></div>
-        <script>
-            // TO MAKE THE MAP APPEAR YOU MUST
-            // ADD YOUR ACCESS TOKEN FROM
-            // https://account.mapbox.com
-            mapboxgl.accessToken =
-                'pk.eyJ1Ijoia2FuYWhpcm8iLCJhIjoiY2x1bDNudzVoMGQ2czJ2bG5rd28wZW5vZyJ9.nN4cCWKsRCqnBPAcoOkpPQ';
-            const map = new mapboxgl.Map({
-                container: 'map',
-                zoom: 2,
-                renderWorldCopies: false,
-                projection: 'globe',
-                customAttribution:
-                    'USGS/NASA: <a href="https://astrogeology.usgs.gov/search/map/Moon/LRO/LROC_WAC/Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013">Surface</a> | <a href="https://planetarynames.wr.usgs.gov/Page/MOON/target">Crater</a> | <a href="https://pgda.gsfc.nasa.gov/products/54">DEM</a>',
-                style: {
-                    version: 8,
-                    glyphs: 'https://mierune.github.io/fonts/{fontstack}/{range}.pbf',
-                    sources: {
-                        surface: {
-                            type: 'raster',
-                            tiles: [
-                                'https://tiles.spatialty.io/moon_surface/{z}/{x}/{y}.png',
-                            ],
-                            tileSize: 256,
-                            maxzoom: 7,
-                        },
-                        // Use a different source for terrain and hillshade layers, to improve render quality
-                        terrain: {
-                            type: 'raster-dem',
-                            tiles: [
-                                'https://tiles.spatialty.io/moon_terrain/{z}/{x}/{y}.png',
-                            ],
-                            tileSize: 512,
-                            maxzoom: 8,
-                            bounds: [-180, -60, 180, 60],
-                        },
-                        crater: {
-                            type: 'geojson',
-                            data: './crater.geojson',
-                        },
-                    },
-                    layers: [
-                        {
-                            id: 'surface',
-                            type: 'raster',
-                            source: 'surface',
-                            paint: {
-                                'raster-fade-duration': 0,
-                            },
-                        },
+	<head>
+		<meta charset="utf-8" />
+		<title>🌜Moon Viewer🌛</title>
+		<meta
+			name="viewport"
+			content="initial-scale=1,maximum-scale=1,user-scalable=no"
+		/>
+		<script src="https://unpkg.com/maplibre-gl@5.0.0-pre.7/dist/maplibre-gl.js"></script>
+		<link
+			href="https://unpkg.com/maplibre-gl@5.0.0-pre.7/dist/maplibre-gl.css"
+			rel="stylesheet"
+		/>
+		<style>
+			body {
+				margin: 0;
+				padding: 0;
+				background-color: #222;
+			}
+			#map {
+				position: absolute;
+				top: 0;
+				bottom: 0;
+				width: 100%;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="map"></div>
+		<script>
+			const map = new maplibregl.Map({
+				container: 'map',
+				zoom: 2,
+				renderWorldCopies: false,
+				projection: 'globe',
+				style: {
+					version: 8,
+					glyphs: 'https://mierune.github.io/fonts/{fontstack}/{range}.pbf',
+					sources: {
+						surface: {
+							type: 'raster',
+							tiles: [
+								'https://tiles.spatialty.io/moon_surface/{z}/{x}/{y}.png',
+							],
+							tileSize: 256,
+							maxzoom: 7,
+							attribution:
+								'USGS/NASA: <a href="https://astrogeology.usgs.gov/search/map/Moon/LRO/LROC_WAC/Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013">Surface</a> | <a href="https://planetarynames.wr.usgs.gov/Page/MOON/target">Crater</a> | <a href="https://pgda.gsfc.nasa.gov/products/54">DEM</a>',
+						},
+						// Use a different source for terrain and hillshade layers, to improve render quality
+						terrain: {
+							type: 'raster-dem',
+							tiles: [
+								'https://tiles.spatialty.io/moon_terrain/{z}/{x}/{y}.png',
+							],
+							tileSize: 512,
+							maxzoom: 8,
+							bounds: [-180, -60, 180, 60],
+						},
+						terrain2: {
+							type: 'raster',
+							tiles: [
+								'https://tiles.spatialty.io/moon_terrain/{z}/{x}/{y}.png',
+							],
+							tileSize: 512,
+							maxzoom: 8,
+							bounds: [-180, -60, 180, 60],
+						},
+						crater: {
+							type: 'geojson',
+							data: './crater.geojson',
+						},
+					},
+					layers: [
+						{
+							id: 'surface',
+							type: 'raster',
+							source: 'surface',
+							paint: {
+								'raster-fade-duration': 0,
+							},
+						},
+						{
+							id: 'crater',
+							type: 'symbol',
+							source: 'crater',
+							layout: {
+								'text-field': ['get', 'name'],
+								'text-font': ['Metropolis Bold'],
+								'text-size': 15,
+							},
+							paint: {
+								'text-color': 'white',
+								'text-halo-color': 'black',
+								'text-halo-width': 1,
+							},
+							minzoom: 5,
+						},
+						{
+							id: 'crater-mid',
+							type: 'symbol',
+							source: 'crater',
+							layout: {
+								'text-field': ['get', 'name'],
+								'text-font': ['Metropolis Bold'],
+								'text-size': 17,
+							},
+							paint: {
+								'text-color': 'white',
+								'text-halo-color': 'black',
+								'text-halo-width': 1,
+							},
+							filter: ['>', ['get', 'diameter'], 100],
+							minzoom: 3.5,
+						},
+						{
+							id: 'crater-big',
+							type: 'symbol',
+							source: 'crater',
+							layout: {
+								'text-field': ['get', 'name'],
+								'text-font': ['Metropolis Bold'],
+								'text-size': 20,
+							},
+							paint: {
+								'text-color': 'white',
+								'text-halo-color': 'black',
+								'text-halo-width': 1,
+							},
+							filter: ['>', ['get', 'diameter'], 300],
+						},
+					],
+					terrain: {
+						source: 'terrain',
+						exaggeration: 20,
+					},
+				},
+				maxPitch: 85,
+				maxZoom: 10,
+			});
 
-                        {
-                            id: 'crater',
-                            type: 'symbol',
-                            source: 'crater',
-                            layout: {
-                                'text-field': ['get', 'name'],
-                                'text-font': ['Metropolis Bold'],
-                                'text-size': 15,
-                            },
-                            paint: {
-                                'text-color': 'white',
-                                'text-halo-color': 'black',
-                                'text-halo-width': 1,
-                            },
-                            minzoom: 5,
-                        },
-                        {
-                            id: 'crater-mid',
-                            type: 'symbol',
-                            source: 'crater',
-                            layout: {
-                                'text-field': ['get', 'name'],
-                                'text-font': ['Metropolis Bold'],
-                                'text-size': 17,
-                            },
-                            paint: {
-                                'text-color': 'white',
-                                'text-halo-color': 'black',
-                                'text-halo-width': 1,
-                            },
-                            filter: ['>', ['get', 'diameter'], 100],
-                            minzoom: 3.5,
-                        },
-                        {
-                            id: 'crater-big',
-                            type: 'symbol',
-                            source: 'crater',
-                            layout: {
-                                'text-field': ['get', 'name'],
-                                'text-font': ['Metropolis Bold'],
-                                'text-size': 20,
-                            },
-                            paint: {
-                                'text-color': 'white',
-                                'text-halo-color': 'black',
-                                'text-halo-width': 1,
-                            },
-                            filter: ['>', ['get', 'diameter'], 300],
-                        },
-                    ],
-                    terrain: {
-                        source: 'terrain',
-                        exaggeration: [
-                            'interpolate',
-                            ['linear'],
-                            ['zoom'],
-                            5,
-                            0,
-                            6,
-                            40,
-                        ],
-                    },
-                    fog: {
-                        color: 'rgba(186, 210, 235, 0.1)', // Lower atmosphere
-                        'high-color': 'rgba(36, 92, 223, 0.1)', // Upper atmosphere
-                        'horizon-blend': 0.2, // Atmosphere thickness (default 0.2 at low zooms)
-                        'space-color': 'rgb(11, 11, 25)', // Background color
-                        'star-intensity': 0.6,
-                    },
-                },
-                maxPitch: 60,
-                maxZoom: 8,
-            });
+			map.addControl(new maplibregl.NavigationControl());
+			map.addControl(new maplibregl.FullscreenControl());
+			map.addControl(new maplibregl.LogoControl(), 'bottom-left');
 
-            map.addControl(new mapboxgl.NavigationControl());
-
-            map.on('move', () => {
-                if (map.getZoom() >= 5) {
-                    map.setProjection('mercator');
-                    if (map.getPitch() === 0) {
-                        map.setPitch(10);
-                    }
-                } else {
-                    map.setProjection('globe');
-                }
-            });
-        </script>
-    </body>
+			map.on('load', () => map.setProjection({ type: 'globe' }));
+		</script>
+	</body>
 </html>
