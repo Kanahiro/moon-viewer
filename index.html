@@ -7,9 +7,9 @@
 			name="viewport"
 			content="initial-scale=1,maximum-scale=1,user-scalable=no"
 		/>
-		<script src="https://unpkg.com/maplibre-gl@5.0.0-pre.9/dist/maplibre-gl.js"></script>
+		<script src="https://unpkg.com/maplibre-gl@^5.0.0/dist/maplibre-gl.js"></script>
 		<link
-			href="https://unpkg.com/maplibre-gl@5.0.0-pre.9/dist/maplibre-gl.css"
+			href="https://unpkg.com/maplibre-gl@^5.0.0/dist/maplibre-gl.css"
 			rel="stylesheet"
 		/>
 		<style>
@@ -33,9 +33,9 @@
 				container: 'map',
 				zoom: 2,
 				renderWorldCopies: false,
-				projection: 'globe',
 				style: {
 					version: 8,
+					projection: { type: 'globe' },
 					glyphs: 'https://mierune.github.io/fonts/{fontstack}/{range}.pbf',
 					sources: {
 						surface: {
@@ -143,8 +143,6 @@
 			map.addControl(new maplibregl.NavigationControl());
 			map.addControl(new maplibregl.FullscreenControl());
 			map.addControl(new maplibregl.LogoControl(), 'bottom-left');
-
-			map.on('load', () => map.setProjection({ type: 'globe' }));
 		</script>
 	</body>
 </html>
